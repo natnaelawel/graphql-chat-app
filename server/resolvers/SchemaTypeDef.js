@@ -14,7 +14,8 @@ typeDefs = gql`
   }
   type Query {
     getUsers: [User]!,
-    # getUser(): User,
+    getUser(id: Int!): User,
+    login(username: String!, password: String!): User!
   }
   type Mutation {
     register(username: String!, email: String, password: String!): User!
