@@ -1,25 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import React from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import "./App.scss";
+import SignIn from "./components/pages/Signin";
+import SignUp from "./components/pages/Signup";
+import Home from "./components/pages/Index";
 
 function App() {
+  const client = new ApolloClient({
+    uri: "http://localhost:4000",
+    cache: new InMemoryCache(),
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApolloProvider client={client}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/register" exact component={SignUp} />
+          <Route path="/login" exact component={SignIn} />
+          <Route path="/" component={Home}/>
+        </Switch>
+      </BrowserRouter>
+    </ApolloProvider>
   );
 }
 

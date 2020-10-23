@@ -4,6 +4,8 @@ const Query = require("./resolvers/Query");
 const typeDefs = require("./resolvers/SchemaTypeDef");
 const {sequelize} = require('./models');
 
+const contextMiddleware = require('./utils/contextMiddleware')
+
 // A map of functions which return data for the schema.
 const resolvers = {
   Query: Query,
@@ -13,7 +15,8 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  // context: sequelize
+  context: contextMiddleware
+  
 });
 
 server.listen().then(({ url }) => {

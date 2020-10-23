@@ -1,9 +1,11 @@
 const bcrypt = require("bcrypt");
-const {UserInputError} = require("apollo-server")
-const { User } = require("../models");
+require("dotenv").config();
+const { UserInputError, AuthenticationError } = require("apollo-server");
+const { User } = require("../../models");
 
-module.exports = {
-  async register(_, args, ctx, info) {
+
+
+const register =  async (_, args, ctx, info) => {
     const { username, email, password } = args;
     let hashedPassword;
     try {
@@ -12,8 +14,8 @@ module.exports = {
       // TODO check if username/email exists
 
       // TODO hash the password
-      hashedPassword =  await bcrypt.hash(password,10);
-      console.log('hashed password is ', hashedPassword)
+      hashedPassword = await bcrypt.hash(password, 10);
+      console.log("hashed password is ", hashedPassword);
       // TODO create user
       const user = await User.create({
         username,
@@ -24,13 +26,10 @@ module.exports = {
       return user;
     } catch (error) {
       console.log(error);
-      throw new UserInputError("Bad Input",{error: error});
+      throw new UserInputError("Bad Input", { error: error });
     }
-  },
-};
+  }
 
-// const match = await bcrypt.compare(password, user.passwordHash);
-
-// if (match) {
-//   //login
-// }
+  module.exports = {
+      register
+  }
