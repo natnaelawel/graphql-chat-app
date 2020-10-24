@@ -5,8 +5,6 @@ const { UserInputError, AuthenticationError } = require("apollo-server");
 const { User, Message } = require("../../models");
 const { Op } = require("sequelize");
 
-
-
 const getMessages = async (_, args, ctx, info) => {
   const { user } = ctx;
   const { from } = args;
@@ -23,10 +21,14 @@ const getMessages = async (_, args, ctx, info) => {
     console.log("usersnames are ", usernames[0]);
     const messages = await Message.findAll({
       where: {
-        [Op.or]: [
-          { from: { [Op.in]: usernames } },
-          { to: { [Op.in]: usernames } },
-        ],
+        // [Op.or]: [
+          // { 
+            from: { [Op.in]: usernames },
+          //  },
+          // { 
+            to: { [Op.in]: usernames }
+          //  },
+        // ],
       },
       order: [["createdAt", "DESC"]],
     });
@@ -42,5 +44,5 @@ const getMessages = async (_, args, ctx, info) => {
 };
 
 module.exports = {
-    getMessages
-}
+  getMessages,
+};

@@ -10,9 +10,10 @@ typeDefs = gql`
     username: String
     email: String
     password: String
-    imageUrl: String
+    imageUrl: String!
     token: String
     createdAt: String!
+    latestMessage: Message
   }
   type Message {
     id: Int

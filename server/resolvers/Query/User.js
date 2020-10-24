@@ -2,17 +2,35 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const { UserInputError, AuthenticationError } = require("apollo-server");
-const { User } = require("../../models");
+const { User, Message } = require("../../models");
 const { Op } = require("sequelize");
 
 const getUsers = async (parent, args, ctx, info) => {
   const { user } = ctx;
+  let users = []
   try {
     // try to exclude the logged in user from the list
-    const users = await User.findAll({
+    users = await User.findAll({
+      attributes: ["username", "imageUrl", "createdAt"],
       where: { username: { [Op.ne]: user.username } },
     });
-    return users;
+
+    const allUserMessages = await Message.findAll({
+      where: {
+        [Op.or]: [{ from: user.username }, { to: user.username }],
+      },
+      order: [["createdAt", "DESC"]],
+    });
+
+    users = users.map((singleUser) => {
+      const latestMessage = allUserMessages.find((singleMessage) => {
+        return singleMessage.from === singleUser.username || singleMessage.to === singleUser.username;
+      });
+      singleUser.latestMessage = latestMessage;
+      return singleUser
+    });
+
+    // return users;
   } catch (error) {
     console.log(error);
   }

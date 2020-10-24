@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { gql, useLazyQuery } from "@apollo/client";
 import { Link, useHistory } from "react-router-dom";
+import { useAuthDispatch } from "../../context/auth";
 
 const LOGIN_QUERY = gql`
   query login($username: String!, $password: String!) {
@@ -34,6 +35,9 @@ function SignIn() {
     password: "",
     error: "",
   });
+
+  const dispatch = useAuthDispatch()
+
   let [login, { called, loading }] = useLazyQuery(LOGIN_QUERY, {
     onError(error) {
       console.log(error, "is error");
@@ -42,7 +46,7 @@ function SignIn() {
     },
     onCompleted(data) {
       console.log(data, "is response");
-      localStorage.setItem("token", data.login.token);
+      dispatch({type: 'LOGIN', payload: data.login})
       history.push("/");
     },
   });
