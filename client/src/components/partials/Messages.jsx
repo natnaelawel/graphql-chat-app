@@ -12,6 +12,10 @@ export const GET_MESSAGES = gql`
       from
       to
       createdAt
+      reactions{
+        uuid
+        content
+      }
     }
   }
 `;
@@ -39,11 +43,10 @@ function Messages() {
     if (messageData) {
       dispatch({
         type: "SET_USER_MESSAGES",
-        payload: { username: selectedUser.username, messages: messageData },
+        payload: { username: selectedUser.username, messages: messageData.getMessages },
       });
     }
   }, [messageData]);
-  console.log(selectedUser, 'is selected user')
   if (messageData == null) {
     return (
       <div className="rounded border border-primary start__messaging d-flex align-items-center justify-content-center ">
@@ -52,14 +55,11 @@ function Messages() {
     );
   }
   return (
-    <div className="rounded border border-primary ">
       <MessageContent
-        currentUser="John Doe"
-        messageData={selectedUser?.messages}
+        selectedUser={selectedUser}
         messageLoading={messageLoading}
         messageError={messageError}
       />
-    </div>
   );
 }
 

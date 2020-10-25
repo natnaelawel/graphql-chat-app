@@ -9,9 +9,10 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import { gql, useLazyQuery } from "@apollo/client";
+import { gql, useApolloClient, useLazyQuery } from "@apollo/client";
 import { Link, useHistory } from "react-router-dom";
 import { useAuthDispatch } from "../../context/auth";
+import classNames from 'classnames'
 
 const LOGIN_QUERY = gql`
   query login($username: String!, $password: String!) {
@@ -36,17 +37,17 @@ function SignIn() {
     error: "",
   });
 
-  const dispatch = useAuthDispatch()
+  const dispatch = useAuthDispatch();
+  const client = useApolloClient();
 
-  let [login, { called, loading }] = useLazyQuery(LOGIN_QUERY, {
+  let [login, { loading }] = useLazyQuery(LOGIN_QUERY, {
     onError(error) {
-      console.log(error, "is error");
       error = error.message;
       setLoginError({ ...loginError, error: error });
     },
     onCompleted(data) {
-      console.log(data, "is response");
-      dispatch({type: 'LOGIN', payload: data.login})
+      dispatch({ type: "LOGIN", payload: data.login });
+      client.clearStore();
       history.push("/");
     },
   });
@@ -87,8 +88,9 @@ function SignIn() {
                 )}
                 <Form.Group controlId="formBasicEmail">
                   <Form.Label
-                    className="lead"
-                    className={loginError.username && "text-danger"}
+                    className={classNames("lead", {
+                      "text-danger": loginError.username,
+                    })}
                   >
                     Username
                   </Form.Label>
@@ -141,7 +143,6 @@ function SignIn() {
                       <Spinner
                         as="span"
                         animation="border"
-                        // size="sm"
                         role="status"
                         aria-hidden="true"
                       />

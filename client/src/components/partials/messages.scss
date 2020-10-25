@@ -1,3 +1,13 @@
+.message__content{
+    max-height: 80vh !important;
+    min-width: 80vh !important;
+    .messages__area{
+        max-height: 75vh;
+        min-height: 75vh;
+        border: 1px solid red;
+        overflow: scroll !important;
+    }
+}
 .send__message{
     border-radius: 0% !important;
     .send__message__input{
@@ -15,4 +25,76 @@
 
 .start__messaging{
     min-height: 80vh;
+}
+
+.message__card{
+    // min-width: 30%;
+    max-width: 100% !important; 
+    min-width: 100% !important;
+}
+.message__box{
+    // border: 1px solid red;
+}
+
+.sent__message{
+    position: relative;
+    padding-left: 30px !important;
+    &:before{
+        content: '';
+        position: absolute;
+        left: 0px;
+        bottom: 0;
+        border-bottom-right-radius: 30px;
+        width: 15px;
+        height: 100%;
+        background-color: rgb(255, 255, 255);
+    }
+}
+.received__message{
+    position: relative;
+    padding-right: 30px !important;
+    &:before{
+        content: '';
+        position: absolute;
+        right: 0px;
+        bottom: 0;
+        border-bottom-left-radius: 30px;
+        width: 15px;
+        height: 100%;
+        background-color: rgb(255, 255, 255);
+    }
+}
+
+.react__btn{
+    font-size: 20px;
+
+    &:focus{
+        box-shadow: none;
+    }
+}
+
+.react__icon__button{
+    padding: 0 0.3rem;
+    transition: font-size 10ms ease-in-out;
+    &:hover{
+        font-size: large;
+        text-decoration: none;
+    }
+}
+
+.react__popover{
+    width: 200px;
+    height: 200px;
+    overflow: auto;
+}
+
+.reaction__area{
+    max-width: 30% !important; 
+    min-width: 30% !important;
+    display: flex;
+    justify-content: space-between;
+
+    .reaction__left{
+
+    }
 }

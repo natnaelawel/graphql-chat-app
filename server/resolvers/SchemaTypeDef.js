@@ -2,15 +2,12 @@ const { gql } = require("apollo-server");
 
 // The GraphQL schema
 typeDefs = gql`
-  input ItemWhereInput {
-    id: Int
-  }
   type User {
     id: Int
     username: String
     email: String
     password: String
-    imageUrl: String!
+    imageUrl: String
     token: String
     createdAt: String!
     latestMessage: Message
@@ -23,6 +20,15 @@ typeDefs = gql`
     to: String!
     createdAt: String
     updatedAt: String
+    reactions: [Reaction]
+  }
+  type Reaction {
+    uuid: String!
+    content: String
+    user: User
+    message: Message
+    createdAt: String
+    updatedAt: String
   }
   type Query {
     getUsers: [User]!
@@ -33,7 +39,19 @@ typeDefs = gql`
   type Mutation {
     register(username: String!, email: String, password: String!): User!
     createMessage(content: String!, to: String!): Message!
+    reactToMessage(uuid: String!, content: String!): Reaction!
   }
+
+  type Subscription {
+    newMessage: Message!
+    newReaction: Reaction!
+  }
+
+  # schema {
+  #   query: Query
+  #   mutation: Mutation
+  #   subscription: Subscription
+  # }
 `;
 
 module.exports = typeDefs;

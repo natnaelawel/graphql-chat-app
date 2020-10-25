@@ -1,24 +1,29 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { AuthenticationError } = require("apollo-server");
+const { PubSub } = require("apollo-server");
 
-const contextMiddlware = (ctx) => {
+const pubsub = new PubSub();
+
+const contextMiddlware = async (ctx) => {
+  let token;
+  let user;
   if (ctx.req && ctx.req.headers.authorization) {
-    console.log(ctx.req);
-    const token = ctx.req.headers.authorization.split("Bearer ")[1] || "";
-
+    token = ctx.req.headers.authorization.split("Bearer ")[1] || "";
+    
     // check for invalid token - synchronous
-    try {
-      const user = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("decoded user iss", user);
-      ctx.user = user;
-    } catch (err) {
-      // err
-      console.log(err);
-      throw new AuthenticationError("UnAuthenticated");
-    }
-    return ctx;
+  } else if (ctx.connection && ctx.connection.context.Authorization) {
+    console.log("subscription token is ", ctx.connection.context.Authorization);
+    token = ctx.connection.context.Authorization.split("Bearer ")[1] || "";
   }
+  if (token) {
+    user = await jwt.verify(token, process.env.JWT_SECRET);
+    ctx.user = user;
+  }
+  
+  ctx.pubsub = pubsub;
+  console.info("is context ", ctx.user)
+  return ctx;
 };
 
 module.exports = contextMiddlware;

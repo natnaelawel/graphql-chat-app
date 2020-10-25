@@ -69,6 +69,7 @@ const login = async (_, args, ctx, info) => {
     const token = jwt.sign(
       {
         username: user.username,
+        imageUrl: user.imageUrl
       },
       process.env.JWT_SECRET,
       { expiresIn: 60 * 60 }

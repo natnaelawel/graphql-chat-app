@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const { UserInputError, AuthenticationError } = require("apollo-server");
-const { User, Message } = require("../../models");
+const { User, Message, Reaction } = require("../../models");
 const { Op } = require("sequelize");
 
 const getMessages = async (_, args, ctx, info) => {
@@ -30,7 +30,8 @@ const getMessages = async (_, args, ctx, info) => {
           //  },
         // ],
       },
-      order: [["createdAt", "DESC"]],
+      order: [["createdAt", "ASC"]],
+      include: [{model: Reaction, as: 'reactions'}]
     });
     const newMessages = messages.map((message) => {
       message.createdAt = message.createdAt.toISOString();

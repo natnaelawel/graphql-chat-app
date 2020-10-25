@@ -2,19 +2,14 @@ import React from "react";
 import { Image } from "react-bootstrap";
 import "./contacts.scss";
 import classNames from "classnames";
-import { useMessageDispatch, useMessageState } from "../../context/message";
+import { useMessageDispatch } from "../../context/message";
 
-function SingleContactRow({ user}) {
-    const dispatch = useMessageDispatch()
-    // const {selectedUser} = useMessageState()
-    // console.log('selected ',selectedUser.username, ' user is ', user.username)
-
-//   const isSelected = selectedUser && selectedUser.username === user.username;
+function SingleContactRow({ user }) {
+  const dispatch = useMessageDispatch();
   return (
     <div
       role="button"
-    //   onClick={() => handleUserClick(user)}
-        onClick={()=> dispatch({type: 'SET_SELECTED_USER', payload: user.username})  }
+      onClick={() => dispatch({ type: "SET_SELECTED_USER", payload: user })}
       className={classNames(
         "contact__row list-group-item d-flex align-items-center",
         { selected: user.selected }
@@ -22,14 +17,17 @@ function SingleContactRow({ user}) {
     >
       <Image
         className=""
-        width="50px"
-        height="50px"
-        src={user.imageUrl}
+        width="40px"
+        height="40px"
+        src={
+          user.imageUrl ||
+          "https://cdn.pixabay.com/photo/2016/08/31/11/54/user-1633249_960_720.png"
+        }
         roundedCircle
       />
       <div
         style={{ flex: "1" }}
-        className="d-flex flex-column ml-3 justify-content-center"
+        className="d-none d-md-flex flex-column ml-3 justify-content-center "
       >
         <div className="d-flex justify-content-between">
           <h5 className="text-capitalize">{user.username}</h5>
